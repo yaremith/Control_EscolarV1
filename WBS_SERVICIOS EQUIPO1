@@ -1,0 +1,1031 @@
+WBS_borrarGrupo EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("borrarGrupo", "urn:borrarGrupo");
+
+$server->register(
+          "borrarGrupo",
+           array("Clave"=>'xsd:string'),
+           array("return"=>'xsd:boolean')
+          );
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+WBS_actualizarGrupo EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("actualizarGrupo", "urn:actualizarGrupo");
+
+$server->register(
+          "actualizarGrupo",
+           array("Clave"=>"xsd:string", "Materia"=>"xsd:string", "IdCarrera"=>"xsd:int", "MatriculaDocente"=>"xsd:string"),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+WBS_actualizarEstatus EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("actualizarEstatus", "urn:actualizarEstatus");
+
+$server->register(
+          "actualizarEstatus",
+           array("Matricula_Alumno"=>"xsd:string", "Nuevo_Estatus"=>"xsd:boolean"),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+
+WBS_	actualizar Alumno
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("actualizarAlumno", "urn:actualizarAlumno");
+
+$server->register(
+          "actualizarAlumno",
+           array("Matricula"=>"xsd:string", "Nombre"=>"xsd:string", "ApellidoPat"=>"xsd:string", "ApellidoMat"=>"xsd:string", "Edad"=>"xsd:int"),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+WBS_Validar EQUIPO 3
+
+<?php
+
+function ValidarHora($HoraInicio, $HoraFin, $Tabla, $Ocupado)
+{
+    if($Tabla != null)
+    {
+        for($Columnas = 0; $Columnas<count($Tabla); $Columnas++)
+        {
+            for($Filas = 0; $Filas<1; $Filas++)
+            {
+                if($HoraInicio > $Tabla[$Columnas][$Filas] && $HoraInicio < $Tabla[$Columnas][$Filas+1] || $HoraInicio == $Tabla[$Columnas][$Filas] && $HoraFin == $Tabla[$Columnas][$Filas+1] )
+                {
+                    if($Ocupado == 'Docente')
+                    {
+                        return json_encode(2);
+                    }
+                    else
+                    {
+                        return json_encode(3);
+                    }
+                }
+                elseif($HoraInicio <= $Tabla[$Columnas][$Filas] && $HoraFin > $Tabla[$Columnas][$Filas+1])
+                {
+                    if($Ocupado == 'Docente')
+                    {
+                        return json_encode(2);
+                    }
+                    else
+                    {
+                        return json_encode(3);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+WBS_Validaciones EQUIPO 3
+
+<?php
+
+function verificarColisionEntreHorarios($Dia1, $HoraInicio1, $HoraFin1, $Dia2, $HoraInicio2, $HoraFin2)
+{
+    if($Dia1 != $Dia2)
+    {
+        return TRUE;
+    }
+    
+    if($HoraInicio1 == $HoraInicio2 || $HoraFin1 == $HoraFin2)
+    {
+        return FALSE;
+    }
+    
+    $Dif = $HoraFin1 - $HoraInicio1 - 1;
+    
+    while ($Dif != 0)
+    {
+        if($HoraInicio1 + $Dif == $HoraInicio2)
+        {
+            return FALSE;
+        }
+        $Dif--;
+    }
+    
+    return TRUE;
+}
+
+function stringToArray($varString)
+{
+    $arreglo = array();
+    $cont = 0;
+    $tok = strtok($varString, ",");
+
+    while ($tok !== false) {
+        
+        $arreglo[$cont] = $tok;
+        $cont++;
+        
+        $tok = strtok(",");
+    }
+    
+    return $arreglo;
+}
+
+
+
+
+
+
+
+
+
+
+IOS_Login EQUIPO 3
+
+<?php
+require './lib/nusoap.php';
+require './conexion.php';
+
+if(isset($_GET['Matricula']) && isset($_GET['Password']))
+{
+    $Matricula = $_GET['Matricula'];
+    $Contrasena = $_GET['Password'];
+    
+    $conexion = conectarse();
+    $sql = "select Nombre from docente where Matricula = '".$Matricula."' and Password = '".$Contrasena."'";
+    $res = mysql_query($sql, $conexion);
+    $result = mysql_fetch_row($res);
+
+    if($result[0] == NULL)
+    {
+        $variable = '[["0"]]';
+    }
+
+    else 
+    {
+        $variable = '[["1"]]';
+    }
+    
+    echo $variable;
+    $conexion = mysql_close();
+}
+
+
+
+
+
+
+
+
+
+IOS_Grupo EQUIPO 3
+
+<?php
+require './lib/nusoap.php';
+require './conexion.php';
+
+if(isset($_GET['Matricula_Docente']))
+{
+    $Matricula_Docente = $_GET['Matricula_Docente'];
+
+    $conexion = conectarse();
+    $sql = "SELECT grupo.Clave, grupo.Materia, carrera.Nombre FROM grupo join carrera on grupo.Id_Carrera = carrera.Id_Carrera WHERE grupo.Matricula_Docente = '$Matricula_Docente'";
+    $cont = 0;
+    $resultado = mysql_query($sql, $conexion);
+    $variable = '[';
+    $tmp = 0;
+    
+    while($row = mysql_fetch_row($resultado))
+    {
+        $cont++;  
+        
+        $variable .= '["'.$row[0].'","'.$row[1].'","'.$row[2].'"]';
+        
+        if($tmp == mysql_num_rows($resultado))
+        {
+            $variable .= ']';
+        }
+        
+        else
+        {
+            $variable .= ',';
+        }
+        
+        $tmp = $cont + 1;
+    }
+
+    if($variable != '[')
+            echo $variable;
+        else
+            echo '[["0", "0", "0"]]';
+    mysql_close();
+}
+
+
+
+
+
+
+
+
+
+
+IOS_DetalleGrupo EQUIPO 3
+
+<?php
+require './lib/nusoap.php';
+require './conexion.php';
+
+    if(isset($_GET['Clave']))
+    {
+        $Clave = $_GET['Clave'];
+
+        $conexion = conectarse();
+        $sql = "SELECT g.Dia, g.HoraInicio, g.HoraFin, s.Clave 
+                FROM grupodetalle as g join salon as s
+                    on g.Id_Salon = s.Id_Salon
+                WHERE Clave_Grupo = '$Clave'";
+        $cont = 0;
+        $resultado = mysql_query($sql, $conexion);
+        $variable = '[';
+        $tmp = 0;
+
+        while($row = mysql_fetch_row($resultado))
+        {
+            $cont++;  
+
+            $variable .= '["'.$row[0].'","'.$row[1].'","'.$row[2].'","'.$row[3].'"]';
+
+            if($tmp == mysql_num_rows($resultado))
+            {
+                $variable .= ']';
+            }
+
+            else
+            {
+                $variable .= ',';
+            }
+
+            $tmp = $cont + 1;
+        }
+
+        if($variable != '[')
+            echo $variable;
+        else
+            echo '[["0", "0", "0", "0"]]';
+        mysql_close();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+Index EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require './functions.php';
+
+$cliente = new nusoap_client("http://192.168.2.102:8080/WebService/wbs_actualizarEstatus.php?wsdl");
+
+$Clave = json_encode("GGGGG00001");
+
+$Res = existenciaGrupo($Clave);
+
+if(json_decode($Res) == TRUE)
+{
+    echo 'Sí se encuentra';
+}
+
+else
+{
+    echo 'No se actualizó';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+Functions EQUIPO 3
+<?php
+
+    require './conexion.php';
+    require './Validar.php';
+    require './Validaciones.php';
+
+    function obtenerStatusAlumno($Matricula)
+    {
+        $J_Matricula = json_decode($Matricula);
+        
+        $conexion = conectarse();
+        $sql = "SELECT Estatus from alumno where Matricula = '$J_Matricula'";
+        
+        $resultado = mysql_query($sql, $conexion);
+        $result = mysql_fetch_row($resultado);
+        
+        if($result[0] == 1)
+        {
+            return json_encode(TRUE);
+        }
+        
+        else if($result[0] == 0)
+        {
+            return json_encode(FALSE);
+        }
+    }
+
+    function actualizarGrupo($Clave, $Materia, $IdCarrera, $MatriculaDocente)
+    {
+        $J_Clave = json_decode($Clave);
+        $J_Materia = json_decode($Materia);
+        $J_IdCarrera = json_decode($IdCarrera);
+        $J_MatriculaDocente = json_decode($MatriculaDocente);
+
+        $conexion = conectarse();
+
+        $queryDocente = "SELECT grupodetalle.Dia, grupodetalle.HoraInicio, grupodetalle.HoraFin
+                FROM grupo JOIN grupodetalle
+                    on grupo.Clave = grupodetalle.Clave_Grupo
+                WHERE grupo.Matricula_Docente = '$J_MatriculaDocente'";
+
+        $DatosDelDocente = mysql_query($queryDocente, $conexion);
+
+        $queryGrupo = "SELECT Dia, HoraInicio, HoraFin
+                        FROM `grupodetalle` 
+                        WHERE Clave_Grupo = '$J_Clave'";
+
+        $DatosDelGrupo = mysql_query($queryGrupo, $conexion);
+
+        while ($fila1 = mysql_fetch_row($DatosDelDocente))
+        {
+            while($fila2 = mysql_fetch_row($DatosDelGrupo))
+            {
+                if(verificarColisionEntreHorarios($fila1[0], $fila1[1], $fila1[2], $fila2[0], $fila2[1], $fila2[2]) == FALSE)
+                {
+                    mysql_close();
+                    return json_encode(FALSE);
+                }
+            }
+        }
+
+        $actualizacion = "UPDATE grupo
+                SET Materia = '$J_Materia', Id_Carrera = $J_IdCarrera, Matricula_Docente = '$J_MatriculaDocente' 
+                WHERE Clave = '$J_Clave'";
+
+        if(mysql_query($actualizacion, $conexion))
+        {
+            mysql_close();
+            return json_encode(TRUE);
+        }
+
+        else {
+            mysql_close();
+            return json_encode(FALSE);
+        }
+    }
+
+    function inscribirAlumno($MatriculaAlumno, $ClaveGrupo, $Fecha)
+    {
+        $J_MatriculaAlumno = json_decode($MatriculaAlumno);
+        $J_ClaveGrupo = json_decode($ClaveGrupo);
+        $J_Fecha = json_decode($Fecha);
+
+        $conexion = conectarse();
+        $sql = "SELECT * FROM `inscribir` WHERE Matricula_Alumno = '$J_MatriculaAlumno'";
+
+        $resultado = mysql_query($sql, $conexion);
+        while($fila = mysql_fetch_row($resultado))
+        {
+            if($fila[2] == $J_ClaveGrupo)
+            {
+                mysql_close();
+                return json_encode(FALSE);
+            }
+        }
+
+        $insercion = "insert into inscribir(Matricula_Alumno, Clave_Grupo, Fecha) values('$J_MatriculaAlumno', '$J_ClaveGrupo', '$J_Fecha')";
+        if(mysql_query($insercion, $conexion))
+        {
+            mysql_close();
+            return json_encode(TRUE);
+        }
+
+        else
+        {
+            mysql_close();
+            return json_encode(FALSE);
+        }
+    }
+
+    function buscarAlumno($Matricula)
+    {
+        $JSON_Matricula = json_decode($Matricula);
+
+        $conexion = conectarse();
+        $sql = "SELECT Nombre from Alumno where Matricula = '$JSON_Matricula'";
+        $res = mysql_query($sql, $conexion);
+        $result = mysql_fetch_row($res);
+        $conexion = mysql_close();
+
+        if($result[0] == NULL)
+        {
+            return json_encode(FALSE);
+        }
+
+        else 
+        {
+            return json_encode(TRUE);
+        }
+    }
+
+    function LogIn($Usuario, $Password)
+    {
+        $JSON_Usuario = json_decode($Usuario);
+        $JSON_Password = json_decode($Password);
+
+        $conexion = conectarse();
+        $sql = "select Usuario from usuarios where Usuario = '".$JSON_Usuario."' and Password = '".$JSON_Password."'";
+        $res = mysql_query($sql, $conexion);
+        $result = mysql_fetch_row($res);
+        $conexion = mysql_close();
+
+        if($result[0] == NULL)
+        {
+            return json_encode(FALSE);
+        }
+
+        else 
+        {
+            return json_encode(TRUE);
+        }
+    }
+
+    function insertarAlumno($Matricula, $Nombre, $ApellidoPat, $ApellidoMat, $Edad, $Estatus, $Carrera)
+    {
+        $J_Matricula = json_decode($Matricula);
+        $J_Nombre = json_decode($Nombre);
+        $J_ApellidoPat = json_decode($ApellidoPat);
+        $J_ApellidoMat = json_decode($ApellidoMat);
+        $J_Edad = json_decode($Edad);
+        $J_Estatus = json_decode($Estatus);
+        $J_Carrera = json_decode($Carrera);
+
+        $conexion = conectarse();
+        $sql = "insert into Alumno values('$J_Matricula', '$J_Nombre', '$J_ApellidoPat', '$J_ApellidoMat', $J_Edad, $J_Estatus, $J_Carrera)";
+
+        if($res = mysql_query($sql, $conexion))
+        {
+            $conexion = mysql_close();
+            return json_encode(TRUE);
+        }
+
+        else 
+        {
+            $conexion = mysql_close();
+            return json_encode(FALSE);
+        }
+    }
+
+    function actualizarEstatus($Matricula_Alumno, $Nuevo_Estatus)
+    {
+        $J_Matricula = json_decode($Matricula_Alumno);
+        $J_Nuevo_Estatus = json_decode($Nuevo_Estatus);
+
+        $conexion = conectarse();
+        
+        if($J_Nuevo_Estatus == TRUE)
+            $sql = "update alumno set Estatus = TRUE where Matricula = '$J_Matricula'";
+        else
+            $sql = "update alumno set Estatus = FALSE where Matricula = '$J_Matricula'";
+
+        if($res = mysql_query($sql, $conexion))
+        {
+            $conexion = mysql_close();
+            return json_encode(TRUE);
+        }
+
+        else 
+        {
+            $conexion = mysql_close();
+            return json_encode(FALSE);
+        }   
+    }
+
+    function actualizarAlumno($Matricula, $Nombre, $ApellidoPat, $ApellidoMat, $Edad)
+    {
+        $J_Matricula = json_decode($Matricula);
+        $J_Nombre = json_decode($Nombre);
+        $J_ApellidoPat = json_decode($ApellidoPat);
+        $J_ApellidoMat = json_decode($ApellidoMat);
+        $J_Edad = json_decode($Edad);
+
+        $conexion = conectarse();
+        $sql = "update alumno set Nombre = '$J_Nombre', Apellido_Paterno = '$J_ApellidoPat', Apellido_Materno = '$J_ApellidoMat', Edad = $J_Edad where Matricula = '$J_Matricula'";
+
+        if($res = mysql_query($sql, $conexion))
+        {
+            $conexion = mysql_close();
+            return json_encode(TRUE);
+        }
+
+        else 
+        {
+            $conexion = mysql_close();
+            return json_encode(FALSE);
+        }   
+    }
+
+    function InsertarGrupo($Clave,$Materia, $Id_Carrera, $Matricula_Docente, $Dia, $HoraInicio, $HoraFin, $Id_Salon)
+    {
+    $conexion = conectarse();
+    $queryDocenteOcupado = "SELECT grupodetalle.HoraInicio, grupodetalle.HoraFin
+    FROM grupodetalle
+    JOIN grupo ON grupo.Clave = grupodetalle.Clave_Grupo
+    WHERE grupo.Matricula_Docente =  '".$Matricula_Docente."'
+    AND grupodetalle.Dia =  '$Dia'";
+    $query1 = mysql_query($queryDocenteOcupado);
+    $Tabla1 = array();
+    $Tabla1[0][0]=0;
+    $Tabla1[0][1]=0;
+    $HorarioSalon = 0;
+    $HorarioDocente=0;
+    
+    $i=0;
+ 
+    while($row = mysql_fetch_array($query1))
+    {
+        $Tabla1[$i] = $row;
+        $i++;
+    }
+    $HorarioDocente = ValidarHora($HoraInicio, $HoraFin, $Tabla1, 'Docente');
+    
+    
+    $querySalonOcupado = "SELECT grupodetalle.HoraInicio, grupodetalle.HoraFin
+    FROM grupodetalle
+    JOIN salon ON salon.Id_Salon = grupodetalle.Id_Salon
+    WHERE grupodetalle.Id_Salon =  '".$Id_Salon."'
+    AND grupodetalle.Dia =  '$Dia'";
+    $query2 = mysql_query($querySalonOcupado);
+    $Tabla2 = array();
+    $Tabla2[0][0]=0;
+    $Tabla2[0][1]=0;
+    
+    $i=0;
+ 
+    while($row2 = mysql_fetch_array($query2))
+    {
+        $Tabla2[$i] = $row2;
+        $i++;
+    }
+    
+    $HorarioSalon = ValidarHora($HoraInicio, $HoraFin, $Tabla2, 'Salon');
+    
+    if($HorarioDocente == 2 && $HorarioSalon == 3)
+    {
+        return json_encode(4);
+    }
+    elseif($HorarioDocente == 2 && $HorarioSalon == 0)
+    {
+        return json_encode(2);
+    }
+    elseif($HorarioDocente == 0 && $HorarioSalon == 3)
+    {
+        return json_encode(3);
+    }
+    elseif($HorarioDocente == 0 && $HorarioSalon == 0)
+    {
+        //Clave, Id_Carrera, Materia, Matricula_Docente, (".$id.", '".$marca."', '".$modelo."', '".$desc."')"
+        $queryInsertarGrupo = "insert into grupo (Clave, Id_Carrera, Materia, Matricula_Docente) values ('".$Clave."', ".$Id_Carrera.", '".$Materia."', '".$Matricula_Docente."')";
+        $queryInsertarGrupoDetalle = "insert into grupodetalle (Clave_Grupo, Dia, HoraFin, HoraInicio, Id_Salon) values ('".$Clave."', ".$Dia.", ".$HoraFin.", ".$HoraInicio.", ".$Id_Salon.")";        
+        $query3 = mysql_query($queryInsertarGrupo);
+        $query4 = mysql_query($queryInsertarGrupoDetalle);
+        if(!$query3 && !$query4)
+        {
+            return json_encode(5);
+        }
+        else
+        {
+            return json_encode(1);
+        }
+    }   
+   } 
+    
+    function existenciaGrupo($Clave)
+    {
+        $J_Clave = json_decode($Clave);
+        
+        $conexion = conectarse();
+        $Consulta = "select * from grupo where Clave = '$J_Clave'";
+        $query = mysql_query($Consulta, $conexion);
+        
+        while($fila = mysql_fetch_row($query))
+        {
+            if($fila[0] != NULL)
+            {
+                mysql_close();
+                return json_encode(TRUE);
+            }
+        }
+        
+        mysql_close();
+        return json_encode(FALSE);
+    }
+    
+    function getGrupo($Clave)
+    {
+        $J_Clave = json_decode($Clave);
+        
+        $conexion = conectarse();
+        $Consulta = "SELECT grupo.Clave, grupo.Materia, carrera.Nombre
+                    FROM grupo join carrera
+                        on grupo.Id_Carrera = carrera.Id_Carrera
+                    WHERE grupo.clave ='$J_Clave'";
+        
+        $query = mysql_query($Consulta, $conexion);
+        $variable = "";
+        
+        while($fila = mysql_fetch_row($query))
+        {
+            $variable = $fila[0].','.$fila[1].','.$fila[2];
+        }
+        
+        return $variable;
+    }
+    
+    function borrarGrupo($Clave)
+    {
+        $J_Clave = json_decode($Clave);
+        
+        $conexion = conectarse();
+        $Consulta1 = "delete from grupodetalle where Clave_grupo = '$J_Clave'";
+        $Consulta3 = "DELETE FROM inscribir WHERE Clave_Grupo = '$J_Clave'";
+        $Consulta2 = "delete from grupo where Clave = '$J_Clave'";
+        
+        $query1 = mysql_query($Consulta1, $conexion);
+        $query3 = mysql_query($Consulta3, $conexion);
+        $query2 = mysql_query($Consulta2, $conexion);
+        
+        if($query1 && $query2 && $query3)
+        {
+            mysql_close();
+            return json_encode(TRUE);
+        }
+        else
+        {
+            mysql_close();
+            return json_encode(FALSE);
+        }
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Conexión EQUIPO 3
+
+<?php
+
+function conectarse()
+{   
+    $conn = mysql_connect("localhost", "root", "") or die(mysql_error());
+    
+    if($conn)
+    {
+        mysql_selectdb("administracion_escuela", $conn);
+        return($conn);
+    }
+    
+    else
+    {
+        echo 'Existe un problema de conexión. Contacta a tu administrador.';
+        return("-1");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+WBS_obtenerEstatusAlumno EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+
+$server = new nusoap_server();
+$server->configureWSDL("getGrupo", "urn:getGrupo");
+
+$server->register(
+          "getGrupo",
+           array("Clave"=>'xsd:int'),
+           array("return"=>'xsd:string')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+WBS_Loguin  EQUIPO3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("LogIn", "urn:LogIn");
+
+$server->register(
+          "LogIn",
+           array("Usuario"=>'xsd:string', "Password"=>'xsd:string'),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+WBS_incertarGrupo  EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+
+$server = new nusoap_server();
+$server->configureWSDL("InsertarGrupo", "urn:InsertarGrupo");
+
+$server->register(
+          "InsertarGrupo",
+           array("Clave"=>'xsd:string', "Materia"=>'xsd:string',"Id_Carrera"=>'xsd:int', "Matricula_Docente"=>'xsd:string',"Dia"=>'xsd:int', "HoraInicio"=>'xsd:int',"HoraFin"=>'xsd:int', "Id_Salon"=>'xsd:int'),
+           array("return"=>'xsd:int')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+WBS_InsertarAlumno EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("insertarAlumno", "urn:insertarAlumno");
+
+$server->register(
+          "insertarAlumno",
+           array("Matricula"=>"xsd:string", "Nombre"=>"xsd:string", "ApellidoPat"=>"xsd:string", "ApellidoMat"=>"xsd:string", "Edad"=>'xsd:int', "Estatus"=>'xsd:boolean', "Carrera"=>'xsd:int'),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+WBS_inscribirAlumno EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("inscribirAlumno", "urn:inscribirAlumno");
+
+$server->register(
+          "inscribirAlumno",
+           array("MatriculaAlumno"=>"xsd:string", "ClaveGrupo"=>"xsd:string", "Fecha"=>"xsd:string"),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+WBS_GetGrupo EQUIPO3	
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+
+$server = new nusoap_server();
+$server->configureWSDL("getGrupo", "urn:getGrupo");
+
+$server->register(
+          "getGrupo",
+           array("Clave"=>'xsd:int'),
+           array("return"=>'xsd:string')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+WBS_existenciaGrupo EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("existenciaGrupo", "urn:existenciaGrupo");
+
+$server->register(
+          "existenciaGrupo",
+           array("Clave"=>'xsd:string'),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
+
+
+
+
+
+
+
+
+
+
+WBS_buscarAlumno EQUIPO 3
+
+<?php
+
+require './lib/nusoap.php';
+require "functions.php";
+
+$server = new nusoap_server();
+$server->configureWSDL("buscarAlumno", "urn:buscarAlumno");
+
+$server->register(
+          "buscarAlumno",
+           array("Matricula"=>"xsd:string"),
+           array("return"=>'xsd:boolean')
+          );
+
+$HTTP_RAW_POST_DATA=isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA :'';
+$server->service($HTTP_RAW_POST_DATA);
+
+
+
