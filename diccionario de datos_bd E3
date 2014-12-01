@@ -1,0 +1,48 @@
+Alumno                                          
+Atributo	Tipo de dato	Observaciones
+Matricula	Varchar (10)	Llave Primaria, Identificador de la tabla Alumno
+Nombre	Varchar (100)	 
+Apellido_Paterno	Varchar (50)	 
+Apellido_Materno	Varchar (50)	 
+Edad	Int (11)	 
+Estatus	Bit (1)	Si el bit marca 1, el alumno esta activo. Si marca cero el alumno esta inactivo. 
+Id_Carrera 	Int (11)	 
+
+Carrera
+Atributo	Tipo de dato	Observaciones
+Id_Carrera	Int (11)	Llave Primaria, Auto Incremental, Identificador de la tabla Carrera
+Nombre	Varchar (50)	 
+
+Docente
+Atributo	Tipo de dato	Observaciones
+Matricula	Varchar (50)	Llave Primaria, Identificador de la tabla Docente
+Nombre	Varchar (100)	 
+Apellido_Paterno	Varchar (100)	 
+Password	Varchar (50)	 
+
+Grupo
+Atributo	Tipo de dato	Observaciones
+Clave	Int (10)	Llave Primaria, Identificador de la tabla Grupo
+Materia	Varchar (50)	 
+Id_Carrera	Int (11)	Llave Foránea 
+Matricula_Docente	Varchar (10)	Llave Foránea 
+
+Grupodetalle
+Atributo	Tipo de dato	Observaciones
+Clave_Grupo	Varchar (50)	Llave Primaria, Identificador de la tabla Grupodetalle
+Dia	Tinyint (4)	Llave Primaria
+HoraInicio	Tinyint (4)	 
+HoraFin	Tinyint (4)	 
+Id_Salon	Int (11)	Lave Foránea  
+
+
+Salon                               
+Atributo	Tipo de dato	Observaciones
+Id_Salon	Int (11)	Llave Primaria, Identificador de la tabla Salon
+Clave	Varchar (5)	 
+
+     Usuarios                                
+Atributo	Tipo de dato	Observaciones
+Usuario	Varchar (50)	Llave Primaria, , Identificador de la tabla Usuarios
+Password	Varchar (50)	 
+
