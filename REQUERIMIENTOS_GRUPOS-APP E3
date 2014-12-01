@@ -1,0 +1,13 @@
+Requisición de servicio web para aplicación móvil – Grupos
+
+El nombre del método para obtener grupos, deberá ser nombrado como “IOS_Grupos”.
+
+El servicio web, deberá recibir 1 parámetro serializado en formato JSON
+•	Clave del docente – String
+
+Y como repuesta el servicio web deberá serializar y mandar en JSON un arreglo con la información de los grupos asignados al usuario.
+
+El arreglo deberá contener:
+•	Clave del Grupo 
+•	Materia del Grupo
+•	Carrera del Grupo
