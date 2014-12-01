@@ -1,0 +1,23 @@
+Requisición de servicio web para aplicación móvil – Detalle de Grupo
+
+El nombre del método para obtener Detalle de grupos se divide en 2 servicios web:
+•	IOS_Detalles_grupo
+•	IOS_Horarios_de_grupo
+
+Ambos servicios web deberán recibir 1 parámetro serializado en formato JSON
+•	Clave de Grupo – String 
+
+Y como repuesta cada servicio servicio web deberá serializar y mandar en JSON 1 arreglo con la siguiente información:
+
+Arreglo IOS_Detalles_grupo
+•	Grupo
+•	Materia
+•	Grado/Nivel
+De forma que el arreglo tenga la forma de -> Grupo\Materia\Grado
+
+Arreglo IOS_Horarios_de_grupo
+•	Dia
+•	Hora
+•	Salón
+De forma que el arreglo tenga la forma de -> Dia\Hora\Salón
+
