@@ -1,0 +1,11 @@
+Requisición de servicio web para aplicación móvil – Login
+
+El nombre del método de login, deberá ser nombrado como “IOS_Login”.
+	
+El servicio web, deberá recibir 2 parámetros serializados en formato JSON
+•	Usuario
+•	Contraseña
+
+Y como repuesta el servicio web deberá serializar y mandar en JSON un valor entro acorde a:
+•	1 si el usuario y contraseña es correcto
+•	0 si el usuario y contraseña es incorrecto
