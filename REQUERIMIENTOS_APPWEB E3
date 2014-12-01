@@ -1,0 +1,182 @@
+REQUERIMIENTO 
+Necesito un método ActualizarAlumno(strig, string, string, string, int)
+Recibe: Cuatro strings y un entero, el primer string será la matricula del alumno, el segundo será el nombre del alumno, el tercero será el Apellido paterno, el cuarto será el Apellido materno y el ultimo será la edad del alumno.
+Regresa: True si la matricula existe y se actualizaron correctamente los campos por los parámetros o false de lo contrario.
+Descripción: Este método realiza la actualización de los datos de un registro de la tabla alumno por los parámetros recibidos al método mediante la matricula recibida y de esta manera poder cambiar los datos de un alumno que ya exista en la BD.
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método ActualizarGrupo()
+Recibe: Un string para el campo “Clave”, un string para el campo “Materia”, un string para el campo “IdCarrera” y un string para el campo “MatriculaDocente”
+Regresa: Un true o un false indicando si el grupo se actualizo o no.
+Descripción: Este método permitirá actualizar un grupo. 
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método ExistenciaGrupo()
+Recibe: Un string para el campo “Clave”
+Regresa: Un “true” o un “false” indicando si existe o no el grupo.
+Descripción: Este método permitirá saber si un grupo existe o no, previo a cualquier ABC a realizar a dicho grupo.
+
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método GetGrupo()
+Recibe: Un string para el campo “Clave”
+Regresa: Un arreglo que contenga la clave del grupo, materia y nombre de la carrera.
+Descripción: Este método permitirá obtener la información del grupo al que se le vaya a realizar algún ABC.
+
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método BorrarGrupo()
+Recibe: Un string para el campo “Clave”
+Regresa: Un true o un false indicando si el grupo se borró o no.
+Descripción: Este método permitirá dar de baja un grupo.
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método BuscarAlumno()
+Recibe: Un string para el campo “MatriculaAlumno”.
+Regresa: Un true o un false indicando si el alumno existe o no.
+Descripción: Este método permitirá saber si existe un alumno.
+
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método InscribirAlumno()
+Recibe: Un string para el campo “MatriculaAlumno”, un string para el campo “ClaveGrupo” y un string para el campo “Fecha”.
+Regresa: Un true o un false indicando si se inscribió el alumno al grupo o no
+Descripción: Este método permitirá inscribir un alumno a un grupo.
+
+
+
+
+
+REQUERIMIENTO 1
+
+1.- Necesito un método LogIn();
+Recibe: dos strings, el primero para Usuario y el segundo para la contraseña estos campos se enviarán encriptados con json.
+Regresa: un true si el usuario y contraseña son correcto y un false sino lo son.
+Descripción: Este método servirá para validar que el usuario y contraseña son correcto al momento de que un docente ingresa a la página web.
+
+2.- Necesito un método ActualizarEstatus():
+Recibe: Dos string, el primer string será la matricula del alumno y el segundo será el nuevo estado del estatus del Alumno y se enviará encriptado en json.
+Regresa: True si la matricula existe y se actualizo el estado por el nuevo o false de lo contrario.
+Descripción: Servirá para cambiar el estatus de un alumno, para darlo de baja y que no se pueda volver a inscribir. Este método solo cambiará el estatus de un alumno.
+
+
+
+
+
+
+
+
+
+REQUERIMIENTO 
+Necesito un método InsertarGrupo():
+Recibe: 7 strings
+Grupo: Clave, Materia, Id_Carrera, Matricula Docente.
+GrupoDetalle: Dia, HoraInicio, HoraFin.
+Salon: Clave.
+Regresa: un dato de tipo entero el cual regresara uno de los siguientes valores correspondientes:
+1.	Se inserto
+2.	No se insertó porque el docente está ocupado a esa misma hora.
+3.	No se insertó porque el salón está ocupado a esa misma hora.
+4.	No se insertó porque el salón y el docente  está ocupado a esa misma hora.
+5.	No se insertó.
+Descripción: Este método realizara la inserción para grupo. Deberá validar si el salón no está en uso; si el docente no está ocupado para la hora designada. 
+
+
+
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método BuscarAlumno()
+Recibe: Un string para el campo “MatriculaAlumno”.
+Regresa: Un true o un false indicando si el alumno existe o no.
+Descripción: Este método permitirá saber si existe un alumno.
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método InscribirAlumno()
+Recibe: Un string para el campo “MatriculaAlumno”, un string para el campo “ClaveGrupo” y un string para el campo “Fecha”.
+Regresa: Un true o un false indicando si se inscribió el alumno al grupo o no
+Descripción: Este método permitirá inscribir un alumno a un grupo.
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método ObtenerAlumno()
+Recibe: Un string para el campo “MatriculaAlumno”.
+Regresa: Un arreglo que contenga la matricula del alumno, su apellido paterno, su apellido materno, su nombre y su estatus.i
+Descripción: Este método permitirá obtener la información del alumno.
+
+
+
+
+
+
+REQUERIMIENTO X
+Necesito un método ObtenerStatusAlumno()
+Recibe: Un string para el campo “MatriculaAlumno”.
+Regresa: Un true o un false indicando si el alumno está inscrito o no. (True si está inscrito, False si no está inscrito)
+Descripción: Este método permitirá obtener el estatus del alumno.
+
+
+
+
+
+
+
+REQUERIMIENTO 1
+
+1.- Necesito un método LogIn();
+Recibe: dos strings, el primero para Usuario y el segundo para la contraseña estos campos se enviarán encriptados con json.
+Regresa: un true si el usuario y contraseña son correcto y un false sino lo son.
+Descripción: Este método servirá para validar que el usuario y contraseña son correcto al momento de que un docente ingresa a la página web.
+
+2.- Necesito un método ActualizarEstatus():
+Recibe: Dos string, el primer string será la matricula del alumno y el segundo será el nuevo estado del estatus del Alumno y se enviará encriptado en json.
+Regresa: True si la matricula existe y se actualizo el estado por el nuevo o false de lo contrario.
+Descripción: Servirá para cambiar el estatus de un alumno, para darlo de baja y que no se pueda volver a inscribir. Este método solo cambiará el estatus de un alumno.
+
+5.- Necesito un método InsertarAlumno();
+Recibe: siete strings, Matricula, Nombre, Apellido Paterno, Apellido Materno, Edad, Estatus y Carrera respectivamente.  Estos campos se enviarán encriptados con json.
+Regresa: un true si los datos se insertaron correctamente y un false si los datos no se pudieron insertar.
+Descripción: Este método servirá para dar de alta un alumno en el sistema.
+
+
